@@ -1,0 +1,222 @@
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const LostFoundApp());
+}
+
+class LostFoundApp extends StatelessWidget {
+  const LostFoundApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Campus Lost & Found',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+// Item Data
+class LostItem {
+  String name;
+  String location;
+  String status;
+  String description;
+
+  LostItem(this.name, this.location, this.status, this.description);
+}
+
+// Home Screen
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  final List<LostItem> items = const [
+    // Items are initialized below through the getter.
+  ];
+
+  List<LostItem> get lostItems => [
+    LostItem('Student ID Card', 'Library', 'Lost',
+        'A student ID card was lost near the library entrance.'),
+    LostItem('Black Wallet', 'Cafeteria', 'Found',
+        'A black wallet was found on a cafeteria table.'),
+    LostItem('Laptop Bag', 'Computer Lab', 'Lost',
+        'A black laptop bag containing books is missing.'),
+    LostItem('Water Bottle', 'Sports Ground', 'Found',
+        'A blue water bottle was found near the sports ground.'),
+    LostItem('Mobile Phone', 'Classroom 101', 'Lost',
+        'A mobile phone was lost after the lecture.'),
+    LostItem('USB Drive', 'IT Lab', 'Found',
+        'A USB drive was found on a computer desk.'),
+    LostItem('Notebook', 'Lecture Hall', 'Lost',
+        'A mathematics notebook is missing from the lecture hall.'),
+    LostItem('Car Keys', 'Parking Area', 'Found',
+        'A set of car keys was found in the parking area.'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Campus Lost & Found'),
+        centerTitle: true,
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+
+      body: ListView.builder(
+        itemCount: lostItems.length,
+        itemBuilder: (context, index) {
+          final item = lostItems[index];
+
+          return Card(
+            margin: const EdgeInsets.symmetric(
+                horizontal: 12, vertical: 7),
+            elevation: 3,
+            child: ListTile(
+              leading: const Icon(
+                Icons.inventory_2,
+                color: Colors.blue,
+                size: 35,
+              ),
+
+              title: Text(
+                item.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Location: ${item.location}'),
+                  Text(
+                    'Status: ${item.status}',
+                    style: TextStyle(
+                      color: item.status == 'Lost'
+                          ? Colors.red
+                          : Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
+              trailing: ElevatedButton(
+                child: const Text('Details'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DetailsScreen(item: item),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// Details Screen
+class DetailsScreen extends StatelessWidget {
+  final LostItem item;
+
+  const DetailsScreen({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Item Details'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+
+          child: Card(
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  const Center(
+                    child: Icon(
+                      Icons.inventory_2,
+                      size: 70,
+                      color: Colors.blue,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Text(
+                    item.name,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Text(
+                    'Location: ${item.location}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    'Status: ${item.status}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: item.status == 'Lost'
+                          ? Colors.red
+                          : Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Text(
+                    'Description: ${item.description}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Go Back'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
